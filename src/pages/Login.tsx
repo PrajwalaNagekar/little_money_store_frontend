@@ -15,6 +15,8 @@ interface FormValues {
     otp1: string;
     otp2: string;
     otp3: string;
+    otp4: string;
+    otp5: string;
 }
 
 const Login = () => {
@@ -50,9 +52,13 @@ const Login = () => {
     }, [countdown]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
-        formik.handleChange(e);
-        if (e.target.value && index < 3) {
-            inputRefs.current[index + 1]?.focus();
+        const { value } = e.target;
+        // Ensure only numeric values are entered
+        if (/^\d*$/.test(value) && value.length <= 1) {
+            formik.handleChange(e);
+            if (e.target.value && index < 5) {
+                inputRefs.current[index + 1]?.focus();
+            }
         }
     };
 
@@ -71,6 +77,8 @@ const Login = () => {
         otp1: Yup.string().required('Required').length(1, 'Must be 1 character'),
         otp2: Yup.string().required('Required').length(1, 'Must be 1 character'),
         otp3: Yup.string().required('Required').length(1, 'Must be 1 character'),
+        otp4: Yup.string().required('Required').length(1, 'Must be 1 character'),
+        otp5: Yup.string().required('Required').length(1, 'Must be 1 character'),
     });
 
     const formik = useFormik<FormValues>({
@@ -80,24 +88,24 @@ const Login = () => {
             otp1: '',
             otp2: '',
             otp3: '',
+            otp4: '',
+            otp5: '',
         },
         validationSchema: loginSchema,
         enableReinitialize: true,
         onSubmit: (values) => {
-            const otp = `${values.otp0}${values.otp1}${values.otp2}${values.otp3}`;
+            const otp = `${values.otp0}${values.otp1}${values.otp2}${values.otp3}${values.otp4}${values.otp5}`;
 
             if (values.contactNo === '9900300011' ) {
-                if (otp === '0852') {
-                   
-                        dispatch(
-                            setUser({
-                                auth: true,
-                                userType: 'merchant',
-                            })
-                        );
-                        showMessage('Logged in successfully');
-                        navigate('/merchant/dashboard');
-                   
+                if (otp === '085235') {
+                    dispatch(
+                        setUser({
+                            auth: true,
+                            userType: 'merchant',
+                        })
+                    );
+                    showMessage('Logged in successfully');
+                    navigate('/merchant/dashboard');
                 } else {
                     showMessage('Invalid OTP.', 'error');
                 }
@@ -155,14 +163,12 @@ const Login = () => {
                                             <span className="absolute start-4 top-1/2 -translate-y-1/2 pb-16">
                                                 <IconPhoneCall fill={true} />
                                             </span>
-                                            {/* <br /> */}
                                             <button
                                                 type="button"
                                                 onClick={() => {
                                                     handleSendOtp(), hidefunction();
                                                 }}
                                                 disabled={!formik.values.contactNo || countdown > 0}
-                                                // className="absolute right-0 top-0 h-full px-3 btn btn-success btn-sm"
                                                 className="w-full btn-success mt-5 p-3"
                                             >
                                                 {countdown > 0 ? `Resend OTP in ${countdown}s` : 'Send OTP'}
@@ -176,7 +182,7 @@ const Login = () => {
                                         <div>
                                             <label htmlFor="otp">OTP</label>
                                             <div className="flex gap-2 justify-evenly">
-                                                {[0, 1, 2, 3].map((index) => {
+                                                {[0, 1, 2, 3, 4, 5].map((index) => {
                                                     const key = `otp${index}` as keyof FormValues;
                                                     return (
                                                         <input
@@ -199,9 +205,9 @@ const Login = () => {
                                                     );
                                                 })}
                                             </div>
-                                            {(formik.touched.otp0 || formik.touched.otp1 || formik.touched.otp2 || formik.touched.otp3) &&
-                                                (formik.errors.otp0 || formik.errors.otp1 || formik.errors.otp2 || formik.errors.otp3) && (
-                                                    <div className="text-danger">{(formik.errors.otp0 || formik.errors.otp1 || formik.errors.otp2 || formik.errors.otp3) as string}</div>
+                                            {(formik.touched.otp0 || formik.touched.otp1 || formik.touched.otp2 || formik.touched.otp3 || formik.touched.otp4 || formik.touched.otp5) &&
+                                                (formik.errors.otp0 || formik.errors.otp1 || formik.errors.otp2 || formik.errors.otp3 || formik.errors.otp4 || formik.errors.otp5) && (
+                                                    <div className="text-danger">{(formik.errors.otp0 || formik.errors.otp1 || formik.errors.otp2 || formik.errors.otp3 || formik.errors.otp4 || formik.errors.otp5) as string}</div>
                                                 )}
                                         </div>
 
