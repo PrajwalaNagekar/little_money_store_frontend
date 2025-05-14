@@ -130,7 +130,7 @@ const Dashboard = () => {
                     </div>
                 </div>
                 {/*  Recent Transactions  */}
-                <div className="panel">
+                {/* <div className="panel">
                     <div className="mb-5 text-lg font-bold">Account Details of Payment</div>
                     <div className="table-responsive">
                         <table>
@@ -208,7 +208,7 @@ const Dashboard = () => {
                             </tbody>
                         </table>
                     </div>
-                </div>
+                </div> */}
             </div>
         </div>
     );

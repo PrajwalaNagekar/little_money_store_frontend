@@ -8,6 +8,7 @@ import * as Yup from 'yup';
 import { showMessage } from '../components/common/ShowMessage';
 import IconPhoneCall from '../components/Icon/IconPhoneCall';
 import Logo from '../assets/logo/logo.png'
+import { mobileVerify, verifyOtp } from '../api';
 
 interface FormValues {
     contactNo: string;
@@ -36,10 +37,20 @@ const Login = () => {
     const [countdown, setCountdown] = useState(0);
 
     const inputRefs = useRef<HTMLInputElement[]>([]);
+    const handleSendOtp = async () => {
+        try {
+            setCountdown(30); // Start countdown
+            showMessage('OTP sent');
+            const response = await mobileVerify({ mobileNumber: formik.values.contactNo });
+            console.log("🚀 ~ handleSendOtp ~ response:", response)
 
-    const handleSendOtp = () => {
-        setCountdown(30);
-        showMessage('OTP sent');
+            if (response?.status === 'success') {
+                showMessage('OTP sent successfully');
+            }
+        } catch (error) {
+            console.error('Error sending OTP:', error);
+            showMessage('Failed to send OTP', 'error');
+        }
     };
 
     useEffect(() => {
@@ -80,6 +91,38 @@ const Login = () => {
         otp4: Yup.string().required('Required').length(1, 'Must be 1 character'),
         otp5: Yup.string().required('Required').length(1, 'Must be 1 character'),
     });
+    const handleLogin = async (values: FormValues) => {
+        const otp = `${values.otp0}${values.otp1}${values.otp2}${values.otp3}${values.otp4}${values.otp5}`;
+
+        try {
+            const response = await verifyOtp({ mobileNumber: values.contactNo, otp });
+
+            if (response?.success === true) {
+                dispatch(setUser({
+                    auth: true,
+                    userType: 'merchant',
+                    userData: response.user || {},
+                }));
+
+                showMessage('Logged in successfully');
+                navigate('/merchant/dashboard');
+
+            } else {
+                showMessage('OTP verification failed', 'error');
+            }
+
+        } catch (error: any) {
+            const errorData = error?.response?.data;
+
+            if (errorData?.isActive === false) {
+                showMessage('Store is disabled from login', 'error');
+            } else {
+                showMessage(errorData?.message || 'OTP verification failed', 'error');
+            }
+            console.error('OTP Verification Error:', error);
+        }
+    };
+
 
     const formik = useFormik<FormValues>({
         initialValues: {
@@ -93,26 +136,8 @@ const Login = () => {
         },
         validationSchema: loginSchema,
         enableReinitialize: true,
-        onSubmit: (values) => {
-            const otp = `${values.otp0}${values.otp1}${values.otp2}${values.otp3}${values.otp4}${values.otp5}`;
+        onSubmit: handleLogin,
 
-            if (values.contactNo === '9900300011' ) {
-                if (otp === '085235') {
-                    dispatch(
-                        setUser({
-                            auth: true,
-                            userType: 'merchant',
-                        })
-                    );
-                    showMessage('Logged in successfully');
-                    navigate('/merchant/dashboard');
-                } else {
-                    showMessage('Invalid OTP.', 'error');
-                }
-            } else {
-                showMessage('Invalid contact number.', 'error');
-            }
-        },
     });
 
     return (
@@ -166,13 +191,19 @@ const Login = () => {
                                             <button
                                                 type="button"
                                                 onClick={() => {
-                                                    handleSendOtp(), hidefunction();
+                                                    if (formik.values.contactNo.match(/^\d{10}$/)) {
+                                                        handleSendOtp();
+                                                        hidefunction();
+                                                    } else {
+                                                        formik.setTouched({ contactNo: true });
+                                                    }
                                                 }}
                                                 disabled={!formik.values.contactNo || countdown > 0}
                                                 className="w-full btn-success mt-5 p-3"
                                             >
-                                                {countdown > 0 ? `Resend OTP in ${countdown}s` : 'Send OTP'}
+                                                {countdown > 0 ? `Resend OTP in ${countdown}s` : 'Continue'}
                                             </button>
+
                                         </div>
 
                                         {formik.touched.contactNo && formik.errors.contactNo && <div className="text-danger">{formik.errors.contactNo}</div>}
@@ -212,7 +243,10 @@ const Login = () => {
                                         </div>
 
                                         <button type="submit" className="btn btn-gradient !mt-6 w-full border-0 uppercase shadow-[0_10px_20px_-10px_rgba(67,97,238,0.44)]">
-                                            Login
+                                            Verify OTP and Login
+                                        </button>
+                                        <button type="submit" className="btn btn-gradient !mt-6 w-full border-0 uppercase shadow-[0_10px_20px_-10px_rgba(67,97,238,0.44)]">
+                                            Resend OTP
                                         </button>
                                     </>
                                 )}

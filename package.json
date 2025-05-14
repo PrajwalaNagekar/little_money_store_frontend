@@ -29,6 +29,7 @@
         "@types/react-text-mask": "^5.4.11",
         "@x1mrdonut1x/nouislider-react": "^3.4.3",
         "apexcharts": "^3.54.0",
+        "axios": "^1.9.0",
         "easymde": "^2.18.0",
         "formik": "^2.2.9",
         "framer-motion": "^12.4.13",

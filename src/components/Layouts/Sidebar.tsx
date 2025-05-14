@@ -8,7 +8,7 @@ import { IRootState } from '../../store';
 import { useState, useEffect } from 'react';
 import IconCaretsDown from '../Icon/IconCaretsDown';
 import IconCaretDown from '../Icon/IconCaretDown';
-import { FiBook, FiBox, FiCreditCard, FiDollarSign, FiFileText, FiGift, FiGrid, FiPlusSquare, FiSettings, FiShoppingBag, FiShoppingCart, FiSquare, FiUsers, FiVideo  ,FiUser } from 'react-icons/fi';
+import { FiBook, FiBox, FiCreditCard, FiDollarSign, FiFileText, FiGift, FiGrid, FiPlusSquare, FiSettings, FiShoppingBag, FiShoppingCart, FiSquare, FiUsers, FiVideo, FiUser } from 'react-icons/fi';
 import { MdOutlineLoyalty } from "react-icons/md";
 import Logo from '../../assets/logo/logo.png';
 import { FaQuestionCircle } from 'react-icons/fa';
@@ -94,10 +94,18 @@ const Sidebar = () => {
                                                 </div>
                                             </NavLink>
                                         </li>
+                                        {/* <li className="nav-item">
+                                            <NavLink to="/merchant/create-order" className="group">
+                                                <div className="flex items-center gap-2">
+                                                    <FiUser className="group-hover:!text-primary shrink-0" />
+                                                    <span>{t('Create Order')}</span>
+                                                </div>
+                                            </NavLink>
+                                        </li> */}
                                         <li className="nav-item">
                                             <NavLink to="/merchant/setcustomer" className="group">
                                                 <div className="flex items-center gap-2">
-                                                <FiUsers className="group-hover:!text-primary shrink-0" />
+                                                    <FiUsers className="group-hover:!text-primary shrink-0" />
                                                     <span>{t('Self Applied')}</span>
                                                 </div>
                                             </NavLink>
@@ -110,14 +118,14 @@ const Sidebar = () => {
                                                 </div>
                                             </NavLink>
                                         </li>
-                                        <li className="nav-item">
+                                        {/* <li className="nav-item">
                                             <NavLink to="/merchant/Support" className="group">
                                                 <div className="flex items-center gap-2">
                                                     <FiBook className="group-hover:!text-primary shrink-0" />
                                                     <span>{t('Support')}</span>
                                                 </div>
                                             </NavLink>
-                                        </li>
+                                        </li> */}
                                         <li className="nav-item">
                                             <NavLink to="/merchant/training-videos" className="group">
                                                 <div className="flex items-center gap-2">
@@ -126,7 +134,7 @@ const Sidebar = () => {
                                                 </div>
                                             </NavLink>
                                         </li>
-                                        <li className="nav-item">
+                                        {/* <li className="nav-item">
                                             <NavLink to="/merchant/reports" className="group">
                                                 <div className="flex items-center gap-2">
                                                     <FiFileText className="group-hover:!text-primary shrink-0" />
@@ -141,7 +149,7 @@ const Sidebar = () => {
                                                     <span>{t('Loyalty')}</span>
                                                 </div>
                                             </NavLink>
-                                        </li>
+                                        </li> */}
                                         {/* <li className="nav-item">
                                             <NavLink to="/merchant/settings" className="group">
                                                 <div className="flex items-center gap-2">
@@ -150,7 +158,7 @@ const Sidebar = () => {
                                                 </div>
                                             </NavLink>
                                         </li> */}
-                                        <li className="nav-item">
+                                        {/* <li className="nav-item">
                                             <NavLink to="/merchant/FAQ" className="group">
                                                 <div className="flex items-center gap-2">
                                                     <FaQuestionCircle className="group-hover:!text-primary shrink-0" />
@@ -165,7 +173,7 @@ const Sidebar = () => {
                                                     <span>{t('QR')}</span>
                                                 </div>
                                             </NavLink>
-                                        </li>
+                                        </li> */}
                                     </ul>
                                 </li>
                             )}

@@ -1,6 +1,7 @@
 import { lazy } from 'react';
 import MerchantDashboard from '../pages/Merchant/Dashboard';
 import MerchantOrders from '../pages/Merchant/Orders';
+import OrdersDemo from '../pages/Merchant/OrdersDemo';
 import MerchantSetOrders from '../pages/Merchant/setOrder';
 import Products from '../pages/MerchantAdmin/Products';
 import MerchantReports from '../pages/Merchant/Reports';
@@ -18,6 +19,7 @@ import BranchDetails from '../components/MerchantAdmin/Branches/BranchDetails';
 import TrainingVideos from '../pages/MerchantAdmin/TrainingVideos';
 import Grievances from '../pages/MerchantAdmin/Grievances';
 import MerchantGrievances from '../pages/Merchant/Grievances';
+import LoanApplyFormDemo from '../components/Merchant/Orders/LoanApplyFormDemo';
 import SeltEnteredCustomer from '../components/Merchant/Orders/SeltEnteredCustomer';
 const KnowledgeBase = lazy(() => import('../pages/Pages/KnowledgeBase'));
 const ContactUsBoxed = lazy(() => import('../pages/Pages/ContactUsBoxed'));
@@ -71,11 +73,27 @@ const routes = [
             </MerchantProtected>
         ),
     },
+     {
+        path: '/merchant/orders-management',
+        element: (
+            <MerchantProtected>
+                <OrdersDemo />
+            </MerchantProtected>
+        ),
+    },
     {
         path: '/merchant/create',
         element: (
             <MerchantProtected>
                 <AddCustomer />
+            </MerchantProtected>
+        ),
+    },
+     {
+        path: '/merchant/create-order',
+        element: (
+            <MerchantProtected>
+                <LoanApplyFormDemo />
             </MerchantProtected>
         ),
     },
