@@ -45,7 +45,9 @@ const Header = () => {
     // const [isOpen, setIsOpen] = useState(false);
     const [loyalty, setLoyalty] = useState(45);
     const [screenSize, setScreenSize] = useState<number>(window.innerWidth);
-
+    const storeName = localStorage.getItem('storeName') || 'STORE NAME';
+    const storeEmail = localStorage.getItem('storeEmail')
+    const storePhone = localStorage.getItem('storePhone')
     useEffect(() => {
         const handleResize = () => setScreenSize(window.innerWidth);
         window.addEventListener('resize', handleResize);
@@ -167,13 +169,13 @@ const Header = () => {
                             <div className="flex items-center justify-center h-[5rem] my-3">
                                 <SwipeButton
                                     score={score} // Pass the score as a prop
-                                    // onSwipe={() => {
-                                    //     if (score >= 500) {
-                                    //         alert('Congratulations! Points Credited Successfully.');
-                                    //     } else {
-                                    //         alert('not! Points Credited Successfully.');
-                                    //     }
-                                    // }}
+                                // onSwipe={() => {
+                                //     if (score >= 500) {
+                                //         alert('Congratulations! Points Credited Successfully.');
+                                //     } else {
+                                //         alert('not! Points Credited Successfully.');
+                                //     }
+                                // }}
                                 />
                             </div>
                         </div>
@@ -200,7 +202,7 @@ const Header = () => {
                     <div className=" sm:flex-1 ltr:sm:ml-0 ltr:ml-auto sm:rtl:mr-0 rtl:mr-auto flex items-center space-x-1.5 lg:space-x-2 rtl:space-x-reverse dark:text-[#d0d2d6]">
                         <div className="sm:ltr:mr-auto sm:rtl:ml-auto"></div>
 
-                 
+
                         <button
                             className="flex items-center text-white font-bold outline-none px-2 py-2 rounded-md relative text-xl  cursor-pointer bg-[#0052cc] hover:bg-[#003d99] hover:scale-105 duration-300"
                             onClick={() => setIsOpen(true)}
@@ -221,18 +223,17 @@ const Header = () => {
                             <img style={{ height: '1.5rem', width: '1.5rem' }} src="/assets/images/icon/coin.png" alt="" />
 
                             {screenSize >= 720 && <span>Loyalty 45</span>}
-                           
+
                         </button>
 
-                        
+
 
                         <div>
                             {themeConfig.theme === 'light' ? (
                                 <button
-                                    className={`${
-                                        themeConfig.theme === 'light' &&
+                                    className={`${themeConfig.theme === 'light' &&
                                         'flex items-center p-2 rounded-full bg-white-light/40 dark:bg-dark/40 hover:text-primary hover:bg-white-light/90 dark:hover:bg-dark/60'
-                                    }`}
+                                        }`}
                                     onClick={() => {
                                         dispatch(toggleTheme('dark'));
                                     }}
@@ -244,10 +245,9 @@ const Header = () => {
                             )}
                             {themeConfig.theme === 'dark' && (
                                 <button
-                                    className={`${
-                                        themeConfig.theme === 'dark' &&
+                                    className={`${themeConfig.theme === 'dark' &&
                                         'flex items-center p-2 rounded-full bg-white-light/40 dark:bg-dark/40 hover:text-primary hover:bg-white-light/90 dark:hover:bg-dark/60'
-                                    }`}
+                                        }`}
                                     onClick={() => {
                                         dispatch(toggleTheme('system'));
                                     }}
@@ -257,10 +257,9 @@ const Header = () => {
                             )}
                             {themeConfig.theme === 'system' && (
                                 <button
-                                    className={`${
-                                        themeConfig.theme === 'system' &&
+                                    className={`${themeConfig.theme === 'system' &&
                                         'flex items-center p-2 rounded-full bg-white-light/40 dark:bg-dark/40 hover:text-primary hover:bg-white-light/90 dark:hover:bg-dark/60'
-                                    }`}
+                                        }`}
                                     onClick={() => {
                                         dispatch(toggleTheme('light'));
                                     }}
@@ -348,24 +347,26 @@ const Header = () => {
                                 offset={[0, 8]}
                                 placement={`${isRtl ? 'bottom-start' : 'bottom-end'}`}
                                 btnClassName="relative group block"
-                                button={<img className="w-9 h-9 rounded-full object-cover saturate-50 group-hover:saturate-100" src="/assets/images/user-profile.jpeg" alt="userProfile" />}
+                                button={<img className="w-9 h-9 rounded-full object-cover saturate-50 group-hover:saturate-100" src="/assets/images/user.png" alt="userProfile" />}
                             >
                                 <ul className="text-dark dark:text-white-dark !py-0 w-[230px] font-semibold dark:text-white-light/90">
                                     <li>
                                         <div className="flex items-center px-4 py-4">
-                                            <img className="rounded-md w-10 h-10 object-cover" src="/assets/images/user-profile.jpeg" alt="userProfile" />
+                                            <img className="rounded-md w-10 h-10 object-cover" src="/assets/images/user.png" alt="userProfile" />
                                             <div className="ltr:pl-4 rtl:pr-4 truncate">
                                                 <h4 className="text-base">
-                                                    John Doe
-                                                    <span className="text-xs bg-success-light rounded text-success px-1 ltr:ml-2 rtl:ml-2">Pro</span>
+                                                    {storeName}
+                                                   
+                                                    {/* <span className="text-xs bg-success-light rounded text-success px-1 ltr:ml-2 rtl:ml-2">Pro</span> */}
                                                 </h4>
                                                 <button type="button" className="text-black/60 hover:text-primary dark:text-dark-light/60 dark:hover:text-white">
-                                                    johndoe@gmail.com
+                                                    {storeEmail}
                                                 </button>
+
                                             </div>
                                         </div>
                                     </li>
-                                    <li>
+                                    {/* <li>
                                         <Link to="/users/profile" className="dark:hover:text-white">
                                             <IconUser className="w-4.5 h-4.5 ltr:mr-2 rtl:ml-2 shrink-0" />
                                             Profile
@@ -382,7 +383,7 @@ const Header = () => {
                                             <IconLockDots className="w-4.5 h-4.5 ltr:mr-2 rtl:ml-2 shrink-0" />
                                             Lock Screen
                                         </Link>
-                                    </li>
+                                    </li> */}
                                     <li className="border-t border-white-light dark:border-white-light/10 py-3 flex justify-center cursor-pointer" onClick={() => dispatch(resetUser())}>
                                         <IconLogout className="w-4.5 h-4.5 ltr:mr-2 rtl:ml-2 rotate-90 shrink-0" />
                                         Sign Out
@@ -394,7 +395,7 @@ const Header = () => {
                 </div>
 
                 {/* horizontal menu */}
-                <ul className="horizontal-menu hidden py-1.5 font-semibold px-6 lg:space-x-1.5 xl:space-x-8 rtl:space-x-reverse bg-white border-t border-[#ebedf2] dark:border-[#191e3a] dark:bg-black text-black dark:text-white-dark">
+                <ul className="horizontal-menu hidden py-1.5 font-semibolsd px-6 lg:space-x-1.5 xl:space-x-8 rtl:space-x-reverse bg-white border-t border-[#ebedf2] dark:border-[#191e3a] dark:bg-black text-black dark:text-white-dark">
                     <li className="menu nav-item relative">
                         <button type="button" className="nav-link">
                             <div className="flex items-center">

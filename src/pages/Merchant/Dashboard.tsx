@@ -5,7 +5,7 @@ import ReactApexChart from 'react-apexcharts';
 import { IRootState } from '../../store';
 
 const donutChart: any = {
-    series: [44, 55, 13],
+    series: [44, 55,],
     options: {
         chart: {
             height: 300,
@@ -20,8 +20,8 @@ const donutChart: any = {
         stroke: {
             show: false,
         },
-        labels: ['Approved', 'Rejected', 'Convected'],
-        colors: ['#4361ee', '#805dca', '#e2a03f'],
+        labels: ['Number Of QR generated Orders', 'Number Of Completed Orders',],
+        colors: ['#4361ee', '#e2a03f',],
         responsive: [
             {
                 breakpoint: 480,
@@ -41,6 +41,9 @@ const donutChart: any = {
 const Dashboard = () => {
     const isDark = useSelector((state: IRootState) => state.themeConfig.theme === 'dark' || state.themeConfig.isDarkMode);
     const isRtl = useSelector((state: IRootState) => state.themeConfig.rtlClass) === 'rtl' ? true : false;
+    const storeName = localStorage.getItem('storeName') || 'STORE NAME';
+    const storePhone = localStorage.getItem('storePhone')
+    const storeMerchantName = localStorage.getItem('storeMerchantName')
 
     const areaChart: any = {
         series: [
@@ -103,13 +106,16 @@ const Dashboard = () => {
                         <img src="/assets/images/profile-1.jpeg" alt="profile1" className="w-10 h-10 rounded-full object-cover" />
                     </div>
                     <div className="font-semibold">
-                        <h6>Store Name</h6>
-                        <p className="text-xs text-white-dark mt-1">MRCHANT001</p>
+                        {/* <h6>Store Name</h6> */}
+                        <h5 className="font-semibold">Store name: {storeName}</h5>
+                        {/* <h6>Phone Number</h6> */}
+                        {/* <h5 className="font-semibold">Phone Number: {storePhone}</h5> */}
+                        <h5>Merchant Name: {storeMerchantName}</h5>
                     </div>
-                    <div className="font-semibold ml-auto">
+                    {/* <div className="font-semibold ml-auto">
                         <h6>Credit points</h6>
                         <p className="text-xs text-white-dark mt-1">300</p>
-                    </div>
+                    </div> */}
                 </div>
                 <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 mb-2">
                     <div className="panel">

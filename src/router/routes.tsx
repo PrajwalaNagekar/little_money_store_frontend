@@ -21,6 +21,8 @@ import Grievances from '../pages/MerchantAdmin/Grievances';
 import MerchantGrievances from '../pages/Merchant/Grievances';
 import LoanApplyFormDemo from '../components/Merchant/Orders/LoanApplyFormDemo';
 import SeltEnteredCustomer from '../components/Merchant/Orders/SeltEnteredCustomer';
+import MerchantDashboardDemo from '../pages/Merchant/MerchantDashboardDemo';
+import EligibilityCheckPage from '../components/Merchant/EligibilityCheckPage';
 const KnowledgeBase = lazy(() => import('../pages/Pages/KnowledgeBase'));
 const ContactUsBoxed = lazy(() => import('../pages/Pages/ContactUsBoxed'));
 const ContactUsCover = lazy(() => import('../pages/Pages/ContactUsCover'));
@@ -58,6 +60,14 @@ const routes = [
         ),
     },
     {
+        path: '/merchant/dashboard-merchant',
+        element: (
+            <MerchantProtected>
+                <MerchantDashboardDemo />
+            </MerchantProtected>
+        ),
+    },
+    {
         path: '/merchant/setcustomer',
         element: (
             <MerchantProtected>
@@ -73,7 +83,7 @@ const routes = [
             </MerchantProtected>
         ),
     },
-     {
+    {
         path: '/merchant/orders-management',
         element: (
             <MerchantProtected>
@@ -89,11 +99,19 @@ const routes = [
             </MerchantProtected>
         ),
     },
-     {
+    {
         path: '/merchant/create-order',
         element: (
             <MerchantProtected>
                 <LoanApplyFormDemo />
+            </MerchantProtected>
+        ),
+    },
+    {
+        path: '/merchant/create-order-form',
+        element: (
+            <MerchantProtected>
+                <EligibilityCheckPage />
             </MerchantProtected>
         ),
     },
@@ -161,7 +179,7 @@ const routes = [
             </MerchantProtected>
         ),
     },
-    
+
     {
         path: '/merchant/Loyalty',
         element: (

@@ -21,7 +21,11 @@ interface FormValues {
 }
 
 const Login = () => {
+    // const [agree, setAgree] = useState(false);
+
     const [hide, setHide] = useState(true);
+    const [timer, setTimer] = useState(0);
+    const [otpSent, setOtpSent] = useState(false);
 
     function hidefunction() {
         setHide(false);
@@ -43,6 +47,8 @@ const Login = () => {
             showMessage('OTP sent');
             const response = await mobileVerify({ mobileNumber: formik.values.contactNo });
             console.log("🚀 ~ handleSendOtp ~ response:", response)
+            setOtpSent(true);
+            setTimer(60);
 
             if (response?.status === 'success') {
                 showMessage('OTP sent successfully');
@@ -54,13 +60,20 @@ const Login = () => {
     };
 
     useEffect(() => {
-        if (countdown > 0) {
-            const timer = setInterval(() => {
-                setCountdown((prev) => (prev <= 1 ? 0 : prev - 1));
+        let interval: NodeJS.Timeout | undefined;
+
+        if (timer > 0) {
+            interval = setInterval(() => {
+                setTimer((prev: number) => prev - 1);
             }, 1000);
-            return () => clearInterval(timer);
         }
-    }, [countdown]);
+
+        return () => {
+            if (interval) {
+                clearInterval(interval);
+            }
+        };
+    }, [timer]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
         const { value } = e.target;
@@ -97,22 +110,31 @@ const Login = () => {
         try {
             const response = await verifyOtp({ mobileNumber: values.contactNo, otp });
 
+            console.log("🚀 ~ handleLogin ~ response:", response)
             if (response?.success === true) {
                 dispatch(setUser({
                     auth: true,
                     userType: 'merchant',
-                    userData: response.user || {},
+                    userData: {
+                        ...response,
+                    },
                 }));
+                localStorage.setItem('storeName', response.storeName);
+                localStorage.setItem('storeEmail', response.storeEmail);
+                localStorage.setItem('storeMerchantName',response.storeMerchantName)
+                const phone=localStorage.setItem('storePhone', response.storePhone)
+                // console.log("🚀 ~ handleLogin ~ phone:", phone)
 
                 showMessage('Logged in successfully');
                 navigate('/merchant/dashboard');
-
-            } else {
+            }
+            else {
                 showMessage('OTP verification failed', 'error');
             }
 
         } catch (error: any) {
             const errorData = error?.response?.data;
+            console.log("🚀 ~ handleLogin ~ errorData:", errorData)
 
             if (errorData?.isActive === false) {
                 showMessage('Store is disabled from login', 'error');
@@ -185,9 +207,23 @@ const Login = () => {
                                                 style={{ fontSize: '20px', width: '100%', paddingRight: '130px' }}
                                                 className="form-input ps-10 placeholder:text-white-dark"
                                             />
-                                            <span className="absolute start-4 top-1/2 -translate-y-1/2 pb-16">
+
+                                            <span className="absolute start-4 top-1/3   -translate-y-1/2 pb-16">
                                                 <IconPhoneCall fill={true} />
                                             </span>
+                                            <div className="flex items-start mt-4">
+                                              
+                                                <label htmlFor="agree" className="text-sm text-gray-700">
+                                                    By clicking <strong>Continue</strong>, you agree to our{' '}
+                                                    <a href="https://littlemoneyindia.com/privacy-policy" target="_blank" className="text-blue-600 underline">
+                                                        Privacy Policy
+                                                    </a>{' '}
+                                                    and{' '}
+                                                    <a href="https://littlemoneyindia.com/terms-use" target="_blank" className="text-blue-600 underline">
+                                                        Terms & Conditions
+                                                    </a>.
+                                                </label>
+                                            </div>
                                             <button
                                                 type="button"
                                                 onClick={() => {
@@ -198,7 +234,7 @@ const Login = () => {
                                                         formik.setTouched({ contactNo: true });
                                                     }
                                                 }}
-                                                disabled={!formik.values.contactNo || countdown > 0}
+                                               
                                                 className="w-full btn-success mt-5 p-3"
                                             >
                                                 {countdown > 0 ? `Resend OTP in ${countdown}s` : 'Continue'}
@@ -245,8 +281,13 @@ const Login = () => {
                                         <button type="submit" className="btn btn-gradient !mt-6 w-full border-0 uppercase shadow-[0_10px_20px_-10px_rgba(67,97,238,0.44)]">
                                             Verify OTP and Login
                                         </button>
-                                        <button type="submit" className="btn btn-gradient !mt-6 w-full border-0 uppercase shadow-[0_10px_20px_-10px_rgba(67,97,238,0.44)]">
-                                            Resend OTP
+                                        <button
+                                            type="button"
+                                            onClick={handleSendOtp}
+                                            disabled={otpSent}
+                                            className="btn btn-gradient !mt-6 w-full border-0 uppercase shadow-[0_10px_20px_-10px_rgba(67,97,238,0.44)]"
+                                        >
+                                            {otpSent ? `Resend OTP in 00:${timer < 10 ? `0${timer}` : timer}` : 'Resend OTP'}
                                         </button>
                                     </>
                                 )}

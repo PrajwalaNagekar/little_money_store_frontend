@@ -86,16 +86,8 @@ const Sidebar = () => {
                                                 </div>
                                             </NavLink>
                                         </li>
-                                        <li className="nav-item">
-                                            <NavLink to="/merchant/create" className="group">
-                                                <div className="flex items-center gap-2">
-                                                    <FiUser className="group-hover:!text-primary shrink-0" />
-                                                    <span>{t('Create Order')}</span>
-                                                </div>
-                                            </NavLink>
-                                        </li>
                                         {/* <li className="nav-item">
-                                            <NavLink to="/merchant/create-order" className="group">
+                                            <NavLink to="/merchant/create" className="group">
                                                 <div className="flex items-center gap-2">
                                                     <FiUser className="group-hover:!text-primary shrink-0" />
                                                     <span>{t('Create Order')}</span>
@@ -103,15 +95,23 @@ const Sidebar = () => {
                                             </NavLink>
                                         </li> */}
                                         <li className="nav-item">
+                                            <NavLink to="/merchant/create-order-form" className="group">
+                                                <div className="flex items-center gap-2">
+                                                    <FiUser className="group-hover:!text-primary shrink-0" />
+                                                    <span>{t('Create Order')}</span>
+                                                </div>
+                                            </NavLink>
+                                        </li>
+                                        {/* <li className="nav-item">
                                             <NavLink to="/merchant/setcustomer" className="group">
                                                 <div className="flex items-center gap-2">
                                                     <FiUsers className="group-hover:!text-primary shrink-0" />
                                                     <span>{t('Self Applied')}</span>
                                                 </div>
                                             </NavLink>
-                                        </li>
+                                        </li> */}
                                         <li className="nav-item">
-                                            <NavLink to="/merchant/orders" className="group">
+                                            <NavLink to="/merchant/orders-management" className="group">
                                                 <div className="flex items-center gap-2">
                                                     <FiShoppingCart className="group-hover:!text-primary shrink-0" />
                                                     <span>{t('Order Management')}</span>
