@@ -1,10 +1,17 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setPageTitle } from '../../store/themeConfigSlice';
 import ReactApexChart from 'react-apexcharts';
 import { IRootState } from '../../store';
+import { getStatusCounts, stats } from '../../api';
+
+type Series = {
+    name: string;
+    data: number[];
+};
 
 const donutChart: any = {
+
     series: [44, 55,],
     options: {
         chart: {
@@ -38,19 +45,67 @@ const donutChart: any = {
     },
 };
 
+const donutChartOptions = {
+    chart: {
+        height: 300,
+        type: 'donut',
+        zoom: {
+            enabled: false,
+        },
+        toolbar: {
+            show: false,
+        },
+    },
+    stroke: {
+        show: false,
+    },
+    labels: ['Number Of QR generated Orders', 'Number Of Completed Orders'],
+    colors: ['#4361ee', '#e2a03f'],
+    responsive: [
+        {
+            breakpoint: 480,
+            options: {
+                chart: {
+                    width: 200,
+                },
+            },
+        },
+    ],
+    legend: {
+        position: 'bottom',
+    },
+    dataLabels: {
+        formatter: function (val: number, opts: any) {
+            // Show the raw value instead of percentage
+            return opts.w.config.series[opts.seriesIndex];
+        }
+    },
+    tooltip: {
+        y: {
+            formatter: function (val: number) {
+                return val;
+            }
+        }
+    }
+};
+
 const Dashboard = () => {
+    const [donutSeries, setDonutSeries] = useState<number[]>([0, 0]);
+    const [areaSeries, setAreaSeries] = useState<Series[]>([]);
+
     const isDark = useSelector((state: IRootState) => state.themeConfig.theme === 'dark' || state.themeConfig.isDarkMode);
     const isRtl = useSelector((state: IRootState) => state.themeConfig.rtlClass) === 'rtl' ? true : false;
     const storeName = localStorage.getItem('storeName') || 'STORE NAME';
     const storePhone = localStorage.getItem('storePhone')
+    const storeCode = localStorage.getItem('storeCode')
+    // console.log("🚀 ~ Dashboard ~ storeCode:", storeCode)
+
     const storeMerchantName = localStorage.getItem('storeMerchantName')
 
     const areaChart: any = {
-        series: [
-            {
-                name: 'Product Sale',
-                data: [1, 4, 2, 30, 20, 60, 90, 30, 150, 170, 140, 17],
-            },
+        series: areaSeries.length ? areaSeries : [
+            { name: 'QR Generated', data: Array(12).fill(0) },
+            { name: 'Completed', data: Array(12).fill(0) },
         ],
         options: {
             chart: {
@@ -97,7 +152,49 @@ const Dashboard = () => {
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(setPageTitle('MERCHANT'));
+
+        const fetchStatusCounts = async () => {
+            try {
+                const data = await getStatusCounts(); // returns { qrGenerated, completed }
+                if (data) {
+                    setDonutSeries([data.qrGenerated || 0, data.completed || 0]); // <-- Corrected here
+                }
+            } catch (error) {
+                console.error("Failed to fetch status counts:", error);
+            }
+        };
+        const fetchStatsData = async () => {
+            try {
+                const response = await stats();
+                if (response && Array.isArray(response.data)) {
+                    const sortedData = response.data.sort((a, b) => a.month - b.month);
+
+                    const qrGeneratedData = sortedData.map(item => item.qrGenerated);
+                    const completedData = sortedData.map(item => item.completed);
+
+                    // Set series data as an array of two series
+                    setAreaSeries([
+                        { name: 'QR Generated', data: qrGeneratedData },
+                        { name: 'Completed', data: completedData },
+                    ]);
+                } else {
+                    console.warn("Unexpected stats data format:", response.data);
+                }
+            } catch (error) {
+                console.error("Failed to fetch stats data:", error);
+            }
+        };
+
+
+
+        fetchStatsData();
+        fetchStatusCounts();
     }, [dispatch]);
+
+
+
+
+
     return (
         <div>
             <div className="panel h-full">
@@ -107,10 +204,11 @@ const Dashboard = () => {
                     </div>
                     <div className="font-semibold">
                         {/* <h6>Store Name</h6> */}
-                        <h5 className="font-semibold">Store name: {storeName}</h5>
+                        <h5 className="font-semibold">Merchant name: {storeName}</h5>
                         {/* <h6>Phone Number</h6> */}
                         {/* <h5 className="font-semibold">Phone Number: {storePhone}</h5> */}
-                        <h5>Merchant Name: {storeMerchantName}</h5>
+                        <h5>Store Name: {storeMerchantName}</h5>
+                        <h5>Store Id:{storeCode}</h5>
                     </div>
                     {/* <div className="font-semibold ml-auto">
                         <h6>Credit points</h6>
@@ -120,10 +218,10 @@ const Dashboard = () => {
                 <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 mb-2">
                     <div className="panel">
                         <div className="mb-5 flex items-center justify-between">
-                            <h5 className="text-lg font-semibold dark:text-white">Customers</h5>
+                            <h5 className="text-lg font-semibold dark:text-white">Orders</h5>
                         </div>
                         <div className="mb-5">
-                            <ReactApexChart series={donutChart.series} options={donutChart.options} className="rounded-lg bg-white dark:bg-black overflow-hidden" type="donut" height={300} />
+                            <ReactApexChart series={donutSeries} options={donutChartOptions} className="rounded-lg bg-white dark:bg-black overflow-hidden" type="donut" height={300} />
                         </div>
                     </div>
                     <div className="panel">

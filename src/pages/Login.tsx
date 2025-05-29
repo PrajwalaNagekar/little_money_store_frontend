@@ -121,8 +121,10 @@ const Login = () => {
                 }));
                 localStorage.setItem('storeName', response.storeName);
                 localStorage.setItem('storeEmail', response.storeEmail);
-                localStorage.setItem('storeMerchantName',response.storeMerchantName)
-                const phone=localStorage.setItem('storePhone', response.storePhone)
+                localStorage.setItem('storeMerchantName', response.storeMerchantName)
+                const storecode=localStorage.setItem('storeCode', response.StoreCode)
+                console.log("🚀 ~ handleLogin ~ storecode:", storecode)
+                const phone = localStorage.setItem('storePhone', response.storePhone)
                 // console.log("🚀 ~ handleLogin ~ phone:", phone)
 
                 showMessage('Logged in successfully');
@@ -212,7 +214,7 @@ const Login = () => {
                                                 <IconPhoneCall fill={true} />
                                             </span>
                                             <div className="flex items-start mt-4">
-                                              
+
                                                 <label htmlFor="agree" className="text-sm text-gray-700">
                                                     By clicking <strong>Continue</strong>, you agree to our{' '}
                                                     <a href="https://littlemoneyindia.com/privacy-policy" target="_blank" className="text-blue-600 underline">
@@ -234,7 +236,7 @@ const Login = () => {
                                                         formik.setTouched({ contactNo: true });
                                                     }
                                                 }}
-                                               
+
                                                 className="w-full btn-success mt-5 p-3"
                                             >
                                                 {countdown > 0 ? `Resend OTP in ${countdown}s` : 'Continue'}
